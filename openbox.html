@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Open Box Production — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF7F2;
+    --warm-white: #FDF9F4;
+    --dark: #1A1612;
+    --mid: #5C4F42;
+    --light: #C9B8A4;
+    --accent: #C8862A;
+    --accent-light: #E8C87A;
+    --line: rgba(90,70,50,0.13);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    border-bottom: 0.5px solid var(--line);
+    background: rgba(250,247,242,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.15rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  .nav-badge {
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 0.5px solid var(--accent);
+    padding: 0.3rem 0.9rem;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(8rem, 20vw, 22rem);
+    font-weight: 300;
+    color: rgba(90,70,50,0.045);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2.5rem;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 9vw, 8rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--dark);
+    margin-bottom: 0.3em;
+    animation: fadeUp 1s 0.1s ease both;
+  }
+
+  .hero-title span {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 4vw, 3.2rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    color: var(--mid);
+    margin-bottom: 3.5rem;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 0.5px;
+    background: var(--accent);
+    margin: 0 auto 3rem;
+    animation: expand 1.2s 0.4s ease both;
+  }
+
+  .coming-soon-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--dark);
+    color: var(--cream);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    padding: 0.75rem 2rem;
+    border-radius: 100px;
+    animation: fadeUp 1s 0.5s ease both;
+  }
+
+  .coming-soon-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    animation: pulse 2s infinite;
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--light);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    animation: fadeUp 1.5s 1s ease both;
+  }
+
+  .scroll-line {
+    width: 0.5px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollLine 1.5s infinite;
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.62rem;
+    font-weight: 400;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    border-top: 0.5px solid var(--line);
+    padding-top: 3rem;
+  }
+
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--mid);
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong {
+    font-weight: 500;
+    color: var(--dark);
+  }
+
+  .about-visual {
+    position: relative;
+    height: 380px;
+  }
+
+  .about-box {
+    position: absolute;
+    border: 0.5px solid var(--line);
+    border-radius: 4px;
+  }
+
+  .about-box-1 {
+    inset: 0 0 2rem 2rem;
+    background: var(--warm-white);
+  }
+
+  .about-box-2 {
+    top: 1.5rem; left: 1.5rem; right: 2rem; bottom: 0;
+    background: transparent;
+    border-color: var(--accent);
+    opacity: 0.4;
+  }
+
+  .about-box-inner {
+    position: absolute;
+    inset: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .about-monogram {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .about-tagline {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--light);
+  }
+
+  /* ── SERVICES ── */
+  .services-section {
+    background: var(--dark);
+    max-width: 100%;
+    padding: 6rem 0;
+  }
+
+  .services-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 4rem;
+  }
+
+  .services-section .section-label { color: var(--accent-light); }
+  .services-section .section-title { color: var(--cream); }
+  .services-section .section-title em { color: var(--accent-light); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .service-card {
+    padding: 3rem 2.5rem;
+    border-right: 0.5px solid rgba(255,255,255,0.08);
+    position: relative;
+    transition: background 0.4s;
+    cursor: default;
+  }
+
+  .service-card:last-child { border-right: none; }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .service-card:hover { background: rgba(255,255,255,0.03); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: rgba(200,134,42,0.2);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(200,185,165,0.7);
+  }
+
+  .service-icon {
+    width: 36px;
+    height: 36px;
+    border: 0.5px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+  }
+
+  /* ── CONTACT / NOTIFY ── */
+  .notify-section {
+    text-align: center;
+    padding: 7rem 4rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .notify-section .section-title { margin-bottom: 1rem; }
+
+  .notify-desc {
+    font-size: 1rem;
+    color: var(--mid);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .notify-form {
+    display: flex;
+    gap: 0;
+    max-width: 420px;
+    margin: 0 auto;
+    border: 0.5px solid var(--dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .notify-input {
+    flex: 1;
+    padding: 0.9rem 1.2rem;
+    border: none;
+    background: var(--warm-white);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--dark);
+    outline: none;
+  }
+
+  .notify-input::placeholder { color: var(--light); }
+
+  .notify-btn {
+    padding: 0.9rem 1.5rem;
+    background: var(--dark);
+    color: var(--cream);
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+
+  .notify-btn:hover { background: var(--accent); }
+
+  .notify-note {
+    font-size: 0.72rem;
+    color: var(--light);
+    margin-top: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid var(--line);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  .footer-copy {
+    font-size: 0.68rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--light);
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-social-link {
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-social-link:hover { color: var(--accent); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes expand {
+    from { width: 0; opacity: 0; }
+    to   { width: 60px; opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes scrollLine {
+    0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+    100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    section { padding: 4rem 2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .about-visual { height: 260px; }
+    .services-inner { padding: 0 2rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card { border-right: none; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    footer { flex-direction: column; gap: 1.2rem; text-align: center; padding: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Open Box </a>
+  <span class="nav-badge">Est. 2025</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg-text">OB</div>
+
+  <p class="hero-eyebrow">Something extraordinary is on its way</p>
+
+  <h1 class="hero-title">
+    Open Box<br />
+
+  </h1>
+
+  <p class="hero-subtitle">Where creativity finds its stage</p>
+
+  <div class="hero-divider"></div>
+
+  <div class="coming-soon-pill">
+    <span class="coming-soon-dot"></span>
+    Coming Soon
+  </div>
+
+  <div class="scroll-hint">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section>
+  <p class="section-label">Who We Are</p>
+  <div class="about-grid">
+    <div class="about-text">
+      <h2 class="section-title">Crafting experiences<br /><em>beyond the ordinary</em></h2>
+      <p>
+        At <strong>Open Box Production</strong>, we believe every moment has the potential to become a memory. We are a creative studio rooted in passion — bringing together the art of event design, the soul of handcraft, and the reach of digital storytelling.
+      </p>
+      <p>
+        Our name reflects our philosophy: an open box holds infinite possibility. At <strong>Open Box</strong>, we approach every project with fresh eyes, boundless creativity, and meticulous attention to detail — turning visions into vivid reality.
+      </p>
+      <p>
+        Whether you're planning a celebration, seeking a one-of-a-kind handcrafted piece, or wanting to elevate your brand's voice online — <strong>Open Box</strong> is your creative partner, start to finish.
+      </p>
+    </div>
+    <div class="about-visual">
+      <div class="about-box about-box-1">
+        <div class="about-box-inner">
+          <div class="about-monogram">OB</div>
+          <span class="about-tagline">Create · Craft · Connect</span>
+        </div>
+      </div>
+      <div class="about-box about-box-2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<div class="services-section">
+  <div class="services-inner">
+    <p class="section-label">What We Do</p>
+    <h2 class="section-title">Our <em>Services</em></h2>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 2L14 6V10L8 14L2 10V6L8 2Z" stroke="#C8862A" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <span class="service-num">01</span>
+        <h3 class="service-name">Events &amp; Décor</h3>
+        <p class="service-desc">
+          From intimate gatherings to grand celebrations — we design and curate events that leave lasting impressions. Every detail, every drape, every light placement is intentional and beautiful.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8" r="5.5" stroke="#C8862A" stroke-width="0.8"/>
+            <path d="M8 4V8L11 10" stroke="#C8862A" stroke-width="0.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="service-num">02</span>
+        <h3 class="service-name">Handicraft</h3>
+        <p class="service-desc">
+          Handmade with heart. We create bespoke handicraft pieces — gifts, décor, and keepsakes — each carrying the warmth and uniqueness that only human hands can produce.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="12" height="9" rx="1.5" stroke="#C8862A" stroke-width="0.8"/>
+            <path d="M5 4V3C5 2.45 5.45 2 6 2H10C10.55 2 11 2.45 11 3V4" stroke="#C8862A" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <span class="service-num">03</span>
+        <h3 class="service-name">Social Media Management</h3>
+        <p class="service-desc">
+          Your brand's story deserves to be told beautifully. We manage, grow, and elevate your social media presence — with strategy, consistency, and content that truly connects.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFY -->
+<div class="notify-section">
+  <p class="section-label">Stay in the Loop</p>
+  <h2 class="section-title">Be the <em>first to know</em></h2>
+  <p class="notify-desc">
+    We're putting the finishing touches on something special. Drop your email below and <strong>Open Box</strong> will reach out the moment we're ready to open our doors.
+  </p>
+  <div class="notify-form">
+    <input class="notify-input" type="email" placeholder="your@email.com" />
+    <button class="notify-btn">Notify Me</button>
+  </div>
+  <p class="notify-note">No spam, ever. Just one meaningful message when we launch.</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-brand">Open Box Production</span>
+  <span class="footer-copy">&copy; 2025 Open Box Production. All rights reserved.</span>
+  <div class="footer-socials">
+    <a href="#" class="footer-social-link">Instagram</a>
+    <a href="#" class="footer-social-link">Facebook</a>
+    <a href="#" class="footer-social-link">WhatsApp</a>
+  </div>
+</footer>
+
+</body>
+</html>
